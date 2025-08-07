@@ -1,0 +1,23 @@
+# Expecto Patronum Trading Agent Dependencies
+# Harry Potter-themed cryptocurrency trading simulator
+
+# This application uses only built-in Python modules:
+# - tkinter (GUI)
+# - sqlite3 (Database)
+# - urllib (HTTP requests)
+# - json (Data parsing)
+# - threading (Background tasks)
+# - datetime (Time handling)
+# - logging (Logging)
+
+# No external dependencies required!
+
+# Optional: For enhanced features (uncomment if available)
+# requests>=2.31.0  # Alternative to urllib for HTTP requests
+# matplotlib>=3.7.0  # For advanced charts (replaces text-based charts)
+# numpy>=1.24.0  # For numerical operations
+
+# Development dependencies (optional)
+# pytest>=7.0.0  # For testing
+# black>=23.0.0  # For code formatting
+# flake8>=6.0.0  # For linting
