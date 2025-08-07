@@ -1,0 +1,80 @@
+# Expecto Patronum Trading Agent - Requirements
+# Harry Potter-themed cryptocurrency trading simulator with Recall API integration
+
+# =============================================================================
+# CORE DEPENDENCIES (Required)
+# =============================================================================
+
+# HTTP requests for API calls (used by market data provider and Recall API)
+requests>=2.31.0
+
+# =============================================================================
+# OPTIONAL ENHANCEMENTS (Uncomment for advanced features)
+# =============================================================================
+
+# Advanced charting (replaces text-based charts with matplotlib)
+# matplotlib>=3.7.0
+
+# Numerical operations and data analysis
+# numpy>=1.24.0
+
+# Data manipulation and analysis
+# pandas>=2.0.0
+
+# Statistical analysis and advanced features
+# scipy>=1.10.0
+
+# =============================================================================
+# DEVELOPMENT DEPENDENCIES (Optional - for developers)
+# =============================================================================
+
+# Testing framework
+# pytest>=7.0.0
+
+# Code formatting
+# black>=23.0.0
+
+# Linting and code quality
+# flake8>=6.0.0
+
+# Type checking
+# mypy>=1.5.0
+
+# =============================================================================
+# BUILT-IN MODULES (No installation required)
+# =============================================================================
+# The following modules are included with Python and don't need installation:
+# - tkinter (GUI framework)
+# - sqlite3 (Database)
+# - urllib (HTTP requests - fallback if requests not available)
+# - json (Data serialization)
+# - threading (Concurrent operations)
+# - datetime (Time handling)
+# - logging (Logging system)
+# - os, sys (System operations)
+
+# =============================================================================
+# SYSTEM REQUIREMENTS
+# =============================================================================
+# - Python 3.8 or higher
+# - Internet connection for real-time market data
+# - Display support for GUI (tkinter)
+# - At least 100MB free disk space for database and logs
+
+# =============================================================================
+# PLATFORM NOTES
+# =============================================================================
+# Linux/Ubuntu: May need to install python3-tk for GUI support
+#   sudo apt-get install python3-tk
+#
+# macOS: Tkinter is included with Python from python.org
+#
+# Windows: Tkinter is included with Python installer
+#
+# =============================================================================
+# RECALL API INTEGRATION
+# =============================================================================
+# For Recall API integration, you need:
+# - Valid Recall API credentials
+# - Competition ID and User ID
+# - Update config/recall_api_config.py with your credentials
