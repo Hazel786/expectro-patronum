@@ -239,6 +239,16 @@ export default function Dashboard() {
             
             <div className="flex items-center space-x-4">
               <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.open('/dashboard/advanced', '_blank')}
+                className="flex items-center space-x-2 border-purple-500 text-purple-400 hover:bg-purple-600/10"
+              >
+                <Target className="h-4 w-4" />
+                <span>Advanced Engine</span>
+              </Button>
+              
+              <Button
                 variant={magicMode ? "default" : "outline"}
                 size="sm"
                 onClick={() => setMagicMode(!magicMode)}
