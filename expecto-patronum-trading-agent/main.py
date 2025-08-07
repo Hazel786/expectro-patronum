@@ -19,6 +19,7 @@ from src.core.trading_engine import TradingEngine
 from src.core.portfolio import Portfolio
 from src.core.risk_manager import RiskManager
 from src.core.market_data_provider import MarketDataProvider
+from src.core.recall_api_connector import RecallAPIConnector
 from src.database.database_manager import DatabaseManager
 
 class ExpectoPatronumApp:
@@ -33,11 +34,24 @@ class ExpectoPatronumApp:
         self.market_data = MarketDataProvider()
         self.portfolio = Portfolio(self.db_manager)
         self.risk_manager = RiskManager()
+        
+        # Initialize Recall API connector (optional)
+        self.recall_connector = None
+        try:
+            # You can load config from config/recall_api_config.py
+            # from config.recall_api_config import get_config
+            # recall_config = get_config('default')
+            # self.recall_connector = RecallAPIConnector(recall_config)
+            pass
+        except Exception as e:
+            print(f"⚠️ Recall API connector not initialized: {e}")
+        
         self.trading_engine = TradingEngine(
             self.market_data, 
             self.portfolio, 
             self.risk_manager,
-            self.db_manager
+            self.db_manager,
+            self.recall_connector
         )
         
         # Initialize GUI

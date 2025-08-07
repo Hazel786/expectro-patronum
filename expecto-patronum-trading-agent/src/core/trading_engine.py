@@ -12,11 +12,12 @@ import logging
 class TradingEngine:
     """Magical trading engine that executes trades using Harry Potter spells"""
     
-    def __init__(self, market_data, portfolio, risk_manager, db_manager):
+    def __init__(self, market_data, portfolio, risk_manager, db_manager, recall_connector=None):
         self.market_data = market_data
         self.portfolio = portfolio
         self.risk_manager = risk_manager
         self.db_manager = db_manager
+        self.recall_connector = recall_connector  # Recall API connector
         self.running = False
         self.lock = threading.Lock()
         
@@ -292,3 +293,116 @@ class TradingEngine:
     def get_available_spells(self) -> List[str]:
         """Get list of available trading spells"""
         return list(self.spells.keys())
+    
+    def set_recall_connector(self, recall_connector):
+        """Set the Recall API connector"""
+        self.recall_connector = recall_connector
+        self.logger.info("🔗 Recall API connector set")
+    
+    def submit_trade_to_recall(self, trade_data: Dict) -> Dict:
+        """Submit a trade to Recall API competition"""
+        if not self.recall_connector:
+            return {
+                'success': False,
+                'message': 'Recall API connector not configured'
+            }
+        
+        try:
+            # Get current portfolio data for context
+            portfolio_stats = self.portfolio.get_portfolio_stats()
+            
+            # Prepare order data for Recall API
+            order_data = {
+                'symbol': trade_data.get('symbol'),
+                'amount': trade_data.get('amount'),
+                'type': 'MARKET',
+                'side': 'BUY' if trade_data.get('spell') == 'EXPECTO_LONG' else 'SELL',
+                'spell': trade_data.get('spell'),
+                'portfolio_value': portfolio_stats.get('cash', 0),
+                'risk_score': 0.0  # Could be calculated based on position size
+            }
+            
+            # Submit to Recall API
+            result = self.recall_connector.submit_order_to_competition(order_data)
+            
+            if result['success']:
+                self.logger.info(f"✅ Trade submitted to Recall competition: {result.get('order_id')}")
+            else:
+                self.logger.warning(f"⚠️ Failed to submit trade to Recall: {result.get('message')}")
+            
+            return result
+            
+        except Exception as e:
+            self.logger.error(f"Error submitting trade to Recall: {e}")
+            return {
+                'success': False,
+                'message': f'Error submitting to Recall: {str(e)}'
+            }
+    
+    def sync_portfolio_with_recall(self) -> Dict:
+        """Synchronize portfolio with Recall API"""
+        if not self.recall_connector:
+            return {
+                'success': False,
+                'message': 'Recall API connector not configured'
+            }
+        
+        try:
+            # Get current portfolio data
+            portfolio_stats = self.portfolio.get_portfolio_stats()
+            portfolio_value = self.portfolio.get_portfolio_value({})
+            
+            # Prepare portfolio data for sync
+            portfolio_data = {
+                'total_value': portfolio_value.get('total_value', 0),
+                'cash': portfolio_value.get('cash', 0),
+                'total_pnl': portfolio_stats.get('total_pnl', 0),
+                'total_pnl_percent': portfolio_stats.get('total_pnl_percent', 0),
+                'positions': self.portfolio.get_positions(),
+                'trades_count': portfolio_stats.get('total_trades', 0),
+                'win_rate': (portfolio_stats.get('winning_trades', 0) / max(1, portfolio_stats.get('total_trades', 1))) * 100,
+                'session_duration': str(datetime.now() - self.session_stats['start_time']).split('.')[0],
+                'risk_level': 'medium'  # Could be calculated based on risk metrics
+            }
+            
+            # Sync with Recall API
+            result = self.recall_connector.sync_portfolio_with_api(portfolio_data)
+            
+            if result['success']:
+                self.logger.info("🔄 Portfolio synchronized with Recall API")
+            else:
+                self.logger.warning(f"⚠️ Portfolio sync failed: {result.get('message')}")
+            
+            return result
+            
+        except Exception as e:
+            self.logger.error(f"Error syncing portfolio with Recall: {e}")
+            return {
+                'success': False,
+                'message': f'Error syncing with Recall: {str(e)}'
+            }
+    
+    def get_recall_competition_status(self) -> Dict:
+        """Get Recall competition status"""
+        if not self.recall_connector:
+            return {
+                'success': False,
+                'message': 'Recall API connector not configured'
+            }
+        
+        try:
+            result = self.recall_connector.get_competition_status()
+            
+            if result['success']:
+                self.logger.info("📊 Recall competition status retrieved")
+            else:
+                self.logger.warning(f"⚠️ Failed to get competition status: {result.get('message')}")
+            
+            return result
+            
+        except Exception as e:
+            self.logger.error(f"Error getting Recall competition status: {e}")
+            return {
+                'success': False,
+                'message': f'Error getting competition status: {str(e)}'
+            }
